@@ -1,1 +1,2 @@
 # algorithm_blog
+这是个一个算法笔记和板子blog
