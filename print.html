@@ -1,0 +1,866 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>algorithm blog</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">algorithm blog</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h1 id="算法学习流程"><a class="header" href="#算法学习流程">算法学习流程</a></h1>
+<h2 id="part1基础算法"><a class="header" href="#part1基础算法">part1.基础算法</a></h2>
+<ol>
+<li>bfs/dfs暴力搜索（走迷宫）</li>
+<li>前缀和/差分（快速求和）</li>
+<li>单调栈/单调队列</li>
+<li>并查集</li>
+<li>kmp/exkmp/manacher（基础字符串处理）</li>
+<li>快速幂</li>
+</ol>
+<h2 id="part2基础算法提升"><a class="header" href="#part2基础算法提升">part2.基础算法提升</a></h2>
+<ol>
+<li>二分提升（二分结果/参数）</li>
+<li>矩阵乘法与快速幂</li>
+<li>bfs/dfs（比较复杂的迷宫）</li>
+<li>高斯消元（位运算线性基）</li>
+</ol>
+<h2 id="part3动态规划"><a class="header" href="#part3动态规划">part3.动态规划</a></h2>
+<h3 id="背包家族"><a class="header" href="#背包家族">背包家族</a></h3>
+<ol>
+<li>01背包</li>
+<li>完全背包</li>
+<li>分组背包</li>
+<li>多重背包（二进制优化，单调队列优化）</li>
+</ol>
+<h3 id="子序列问题"><a class="header" href="#子序列问题">子序列问题</a></h3>
+<ol>
+<li>最长公共子序列</li>
+<li>合法子序列数量</li>
+</ol>
+<h3 id="划分问题"><a class="header" href="#划分问题">划分问题</a></h3>
+<ol>
+<li>最优划分</li>
+<li>约束划分个数（划分为k个）</li>
+</ol>
+<h3 id="状态机"><a class="header" href="#状态机">状态机</a></h3>
+<ol>
+<li>买卖股票状态机（决策有后果）</li>
+</ol>
+<h3 id="树上背包综合运用上方问题"><a class="header" href="#树上背包综合运用上方问题">树上背包（综合运用上方问题）</a></h3>
+<ol>
+<li>树上最大独立集（没有上司的舞会）（与状态机相关）</li>
+<li>树上背包（dfs+约束划分个数+状态机）</li>
+</ol>
+<h3 id="状态压缩dp"><a class="header" href="#状态压缩dp">状态压缩dp</a></h3>
+<h3 id="数位dp"><a class="header" href="#数位dp">数位dp</a></h3>
+<h2 id="part4图论家族"><a class="header" href="#part4图论家族">part4.图论家族</a></h2>
+<ol>
+<li>图的基础表示和遍历（DFS、BFS）</li>
+<li>最短路径算法（Dijkstra、Bellman-Ford、SPFA、Floyd）</li>
+<li>最小生成树（Prim、Kruskal）</li>
+<li>拓扑排序</li>
+<li>欧拉路径与回路</li>
+<li>强连通分量（Kosaraju、Tarjan）</li>
+<li>二分图匹配（匈牙利算法、二分图最大匹配、最小点覆盖、最大独立集等）</li>
+<li>网络流（最大流、最小割、费用流）</li>
+</ol>
+<h2 id="part5数论"><a class="header" href="#part5数论">part5.数论</a></h2>
+<p>（待填入内容）</p>
+<div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h1 id="背包问题算法讲解"><a class="header" href="#背包问题算法讲解">背包问题算法讲解</a></h1>
+<h2 id="01背包问题"><a class="header" href="#01背包问题">01背包问题</a></h2>
+<p>01背包问题是最基础的背包问题，特点是每种物品只有一件。
+在处理每一件物品的时候，我们只有一种考虑的方案--选择这件物品或者不选择。
+如果我们选择这种物品消耗<code>c[i]</code>的资源，得到<code>v[i]</code>的收益
+因此，如果我们<code>面对第i个物品，拥有j的资源的时候</code>，便可以将问题转化为
+我在<code>不买这个物品</code>和<code>买下这个物品</code>哪种选择的收益更高
+如果我们以<code>dp[i][j]</code>表示上述的<code>"面对第i个物品，拥有j的资源的时候"</code>时能得到的最大收益
+那这个<code>dp[i][j]</code>就可以被转化为在<code>dp[i-1][j]</code>与<code>dp[i-1][j-c[i]]+v[i]</code>中选择较大那个
+因此，状态转移方程即为
+<code>dp[i+1][j] = max(dp[i][j],dp[i][j-c[i]]+v[i])</code></p>
+<h3 id="代码解析"><a class="header" href="#代码解析">代码解析</a></h3>
+<p>(下面的代码我直接使用了滚动数组优化)</p>
+<pre><code class="language-c++">vector&lt;int&gt; dp(t+1); 
+// 创建动态规划数组，
+// dp[j]表示容量为j时的最大价值
+for(int i=0;i&lt;m;++i){ // 遍历所有物品
+    for(int j=t;j&gt;=cost[i];--j){ 
+        // 从大到小遍历背包容量
+        dp[j]=max(dp[j],dp[j-cost[i]]+value[i]); 
+        // 状态转移方程
+    }
+}
+</code></pre>
+<h3 id="关键点"><a class="header" href="#关键点">关键点</a></h3>
+<ol>
+<li><strong>状态定义</strong>：<code>dp[j]</code>表示背包容量为j时能获得的最大价值</li>
+<li><strong>状态转移</strong>：对于每个物品，考虑放入或不放入两种情况</li>
+<li><strong>逆序遍历</strong>：必须从大到小遍历背包容量，确保每个物品只被使用一次
+下面给出“完全背包”部分的完整展开，完全对标你已有的“01背包”写法。你可以直接替换或合并到原笔记中，保持风格一致。</li>
+</ol>
+<hr />
+<h2 id="完全背包问题"><a class="header" href="#完全背包问题">完全背包问题</a></h2>
+<p>完全背包问题在01背包的基础上，把「每种物品只有1件」放宽为「每种物品有∞件」。<br />
+因此，当我们<strong>面对第i个物品、拥有j的资源时</strong>，决策不再是“拿或不拿”，而是**“拿0件、拿1件、拿2件……直到背包放不下”**。<br />
+如果我们沿用<code>dp[i][j]</code>表示“仅考虑前i种物品、背包容量为j时能获得的最大价值”，那么状态转移可以写成<br />
+<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">ma</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mrel mtight">≥</span><span class="mord mtight">0</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2452em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">])</span></span></span></span>，其中<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">⋅</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">c</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span>。</p>
+<p>直接枚举k会超时，但注意到<br />
+<code>dp[i+1][j] = max(dp[i][j], dp[i+1][j−c[i]] + v[i])</code><br />
+——后者已经包含了“再拿1件”的决策，因为<code>dp[i+1][j−c[i]] + v[i]</code>并没有移动物品的指针，因此我们实际上拿完当前这个东西，实际上是在考虑“再拿一个，或者选择拿下一个”
+于是得到和01背包<strong>形式完全一样</strong>、但<strong>遍历顺序相反</strong>的经典方程：</p>
+<p><code>dp[i+1][j] = max(dp[i][j], dp[i+1][j−c[i]] + v[i])</code></p>
+<h3 id="代码解析滚动数组优化"><a class="header" href="#代码解析滚动数组优化">代码解析（滚动数组优化）</a></h3>
+<pre><code class="language-cpp">vector&lt;int&gt; dp(t + 1);          // dp[j]：容量为j时的最大价值
+for (int i = 0; i &lt; m; ++i) {   // 遍历所有物品
+    for (int j = cost[i]; j &lt;= t; ++j) {  // 从小到大枚举容量
+        dp[j] = max(dp[j], dp[j - cost[i]] + value[i]); // 状态转移
+    }
+}
+</code></pre>
+<h3 id="关键点-1"><a class="header" href="#关键点-1">关键点</a></h3>
+<ol>
+<li><strong>状态定义</strong>：同01背包，<code>dp[j]</code>表示容量为j时的最大价值。</li>
+<li><strong>状态转移</strong>：方程形式与01背包相同，但<strong>第二维引用的是“本行”刚刚更新过的值</strong>，从而隐含“无限次使用”。</li>
+<li><strong>正序遍历</strong>：从小到大枚举容量，保证<code>dp[j−c[i]]</code>在本轮<strong>已经更新过</strong>，即允许当前物品被重复使用。</li>
+</ol>
+<h3 id="记忆口诀"><a class="header" href="#记忆口诀">记忆口诀</a></h3>
+<blockquote>
+<p><strong>01背包逆着跑，完全背包顺着扫；方程一样顺序反，无限次数自然到。</strong></p>
+</blockquote>
+<div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h2 id="-算法讲解"><a class="header" href="#-算法讲解">📖 算法讲解</a></h2>
+<h3 id="1-问题模型"><a class="header" href="#1-问题模型">1. 问题模型</a></h3>
+<p>给定带权有向图 <code>G=(V,E)</code>，源点 <code>s</code>，求 <code>s</code> 到所有其它顶点的最短路径长度（权值和最小）。<br />
+允许权值为正，<strong>不允许负权边</strong>（否则需 Bellman-Ford/SPFA）。</p>
+<hr />
+<h3 id="2-dijkstra-思想"><a class="header" href="#2-dijkstra-思想">2. Dijkstra 思想</a></h3>
+<ol>
+<li>维护一个「已确定最短路径」的集合 <code>S</code>，初始只有 <code>s</code>。</li>
+<li>每次从 <code>V-S</code> 中挑选一个「距离源点最近」的顶点 <code>u</code>，加入 <code>S</code>。</li>
+<li>用 <code>u</code> 的所有出边做<strong>松弛操作</strong>（relax）：<br />
+若 <code>dist[u] + w(u,v) &lt; dist[v]</code>，则更新 <code>dist[v]</code>。</li>
+<li>重复第 2 步直到所有顶点都在 <code>S</code> 中。</li>
+</ol>
+<p>正确性证明依赖于「非负权」下的贪心选择性质：当前堆顶挑出的 <code>u</code> 已经不可能被后续节点再次松弛出更小的值：
+假定一个节点能够被以两条路径到达，不妨设第一条路径为直接到达，权值为100，第二条路径为绕99个节点到达，每个节点权值为1。
+在这种情况下，由于每次堆顶弹出从初始点到对应节点的权值最小的那一条路径，因此它每次都会优先弹出绕路的路径。
+（即使是最后一个节点，绕路的路径的j依然是99，小于直接走的100）
+因此，我们可以确认，堆顶首次弹出的方案就是最优的</p>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using i64 = long long;
+struct Edge{
+    int to;
+    i64 w;
+    bool operator&lt;(const Edge&amp; b)const{
+        return w &gt; b.w;
+        //为了获得最小堆，需要反过来
+    }
+    Edge(int t,i64 w)
+        :to(t),w(w){
+    }
+};
+int main(){
+    i64 n,m,s;
+    std::cin&gt;&gt;n&gt;&gt;m&gt;&gt;s;
+    std::vector&lt;std::vector&lt;Edge&gt;&gt; conn(n+1);
+    // 初始化邻接矩阵
+    for(int i = 0;i &lt; m;++i){
+        int a,b,c;
+        std::cin&gt;&gt;a&gt;&gt;b&gt;&gt;c;
+        conn[a].push_back({b,c}); 
+    }
+    // 建立图
+    std::priority_queue&lt;Edge&gt; q;
+    // 优先队列，保证每次弹出的都是距离已经更新的节点最近的节点
+    q.push({s,0});
+    // 优先队列中压入初始节点
+    std::vector&lt;i64&gt; minDistance(n+1,std::numeric_limits&lt;i64&gt;::max());
+    // 结果向量，存储初始节点到每个节点的最短路径，初始化为正无穷
+    minDistance[s] = 0;
+    // 将初始节点到自己的距离设置为0
+    std::vector&lt;char&gt; vis(n+1,0);
+    // vis向量，避免重复更新
+    while(!q.empty()){
+        auto [i,j] = q.top();q.pop();
+        // 获取堆顶的节点（即距离已更新节点最近的节点）
+        // i代表当前节点索引，j代表从初始节点到i节点的最小权值
+        if(vis[i])continue;
+        vis[i] = 1;
+        // 注意：不写这个vis依然能得到正确结果，但是它会tle
+        // 假定一个节点能够被以两条路径到达，不妨设第一条路径为直接到达，权值为100，第二条路径为绕99个节点到达，每个节点权值为1
+        // 在这种情况下，由于每次堆顶弹出从初始点到对应节点的权值最小的那一条路径，因此它每次都会优先弹出绕路的路径
+        // （即使是最后一个节点，绕路的路径的j依然是99，小于直接走的100）
+        // 因此，我们可以确认，如果堆顶弹出这个节点，那么这个节点一定已经是最优的节点
+        // （但是，作为其他节点的子节点，确实可能被更新多次）
+        for(auto [a,b]:conn[i]){
+            // 通过邻接矩阵访问当前节点链接的节点
+            // a代表下一个节点的索引，b代表距离下一个节点的距离
+            if(minDistance[a] &gt; j + b){
+                // 如果通过当前路径能更短的到达下一个节点，那么就更新
+                minDistance[a] = j + b;
+                q.push({a,minDistance[a]});
+            }
+        }
+    }
+    for(int i = 1;i &lt;= n;++i){
+        std::cout&lt;&lt;minDistance[i]&lt;&lt;" ";
+    }
+    std::cout&lt;&lt;std::endl;
+    return 0;
+}
+
+</code></pre>
+<h3 id="复杂度计算"><a class="header" href="#复杂度计算">复杂度计算</a></h3>
+<p>把复杂度拆成<strong>两部分</strong>看就清楚了：</p>
+<ol>
+<li>
+<p>每个顶点<strong>最多进堆一次</strong><br />
+共 <code>n</code> 个顶点 → 堆中插入/弹出 <code>n</code> 次，每次 <code>O(log n)</code><br />
+合计 <code>O(n log n)</code></p>
+</li>
+<li>
+<p>每条边<strong>最多触发一次松弛并成功更新</strong><br />
+共 <code>m</code> 条边 → 每次更新要把新距离 <code>push</code> 进堆，<code>O(log n)</code><br />
+合计 <code>O(m log n)</code></p>
+</li>
+</ol>
+<p>把两部分相加就是<br />
+<code>O(n log n + m log n) = O((n + m) log n)</code></p>
+<ul>
+<li>当图<strong>稀疏</strong>（<code>m ≈ n</code>）时，复杂度由 <code>n log n</code> 主导；</li>
+<li>当图<strong>稠密</strong>（<code>m ≈ n²</code>）时，复杂度由 <code>m log n</code> 主导。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h2 id="-算法讲解-1"><a class="header" href="#-算法讲解-1">📖 算法讲解</a></h2>
+<h3 id="1-问题模型-1"><a class="header" href="#1-问题模型-1">1. 问题模型</a></h3>
+<p>给定带权有向图 <code>G=(V,E)</code>，源点 <code>s</code>，求 <code>s</code> 到所有其它顶点的最短路径长度（权值和最小）。<br />
+<strong>允许负权边</strong>，但<strong>不允许负权环</strong>（否则最短路径无定义）。<br />
+若图中存在从 <code>s</code> 可达的负权环，算法能够检测并报告。</p>
+<hr />
+<h3 id="2-bellman-ford-思想"><a class="header" href="#2-bellman-ford-思想">2. Bellman-Ford 思想</a></h3>
+<ol>
+<li>维护一个距离数组 <code>dist[1…n]</code>，初始时 <code>dist[s]=0</code>，其余为正无穷。</li>
+<li>进行 <code>n-1</code> 轮「全边松弛」：<br />
+对每条边 <code>(u,v,w)</code>，若 <code>dist[u]+w &lt; dist[v]</code>，则更新 <code>dist[v]</code>。</li>
+<li>第 <code>n</code> 轮再扫描所有边，若仍能松弛，则说明存在负权环。</li>
+</ol>
+<p>正确性证明依赖于「路径边数」归纳：<br />
+第 <code>k</code> 轮结束后，所有<strong>最多由 <code>k</code> 条边组成</strong>的最短路径都已求出。<br />
+由于简单路径最多 <code>n-1</code> 条边，<code>n-1</code> 轮即可保证收敛；第 <code>n</code> 轮若仍松弛，说明存在无限缩短的负环。</p>
+<hr />
+<h3 id="3-代码实现"><a class="header" href="#3-代码实现">3. 代码实现</a></h3>
+<p>以下代码与给出 Dijkstra 示例风格保持一致：</p>
+<ul>
+<li>采用 <code>i64</code> 类型</li>
+<li>使用 <code>vector&lt;char&gt;</code> 做标志</li>
+<li>注释风格、变量命名、输入输出格式均仿照原示例</li>
+<li>额外返回「是否存在负权环」信息</li>
+</ul>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using i64 = long long;
+struct Edge {
+    int from, to;
+    i64 w;
+    Edge(int u, int v, i64 c) : from(u), to(v), w(c) {}
+};
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    i64 n, m, s;
+    std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; s;
+
+    std::vector&lt;Edge&gt; edges;
+    // 本题暂时不需要使用邻接矩阵
+    edges.reserve(m);
+    for (int i = 0; i &lt; m; ++i) {
+        int a, b, c;
+        std::cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        edges.emplace_back(a, b, c);
+    }
+
+    const i64 INF = std::numeric_limits&lt;i64&gt;::max();
+    std::vector&lt;i64&gt; dist(n + 1, INF);
+    dist[s] = 0;
+
+    // n-1 轮松弛
+    for (int round = 1; round &lt; n; ++round) {
+        bool updated = false;
+        for (auto &amp;[u, v, w] : edges) {
+            if (dist[u] != INF &amp;&amp; dist[v] &gt; dist[u] + w) {
+                dist[v] = dist[u] + w;
+                updated = true;
+            }
+        }
+        if (!updated) break;          // 提前收敛
+    }
+
+    // 第 n 轮检测负环
+    bool hasNegCycle = false;
+    for (auto &amp;[u, v, w] : edges) {
+        if (dist[u] != INF &amp;&amp; dist[v] &gt; dist[u] + w) {
+            hasNegCycle = true;
+            break;
+        }
+    }
+
+    if (hasNegCycle) {
+        std::cout &lt;&lt; "NEGATIVE CYCLE DETECTED\n";
+    } else {
+        for (int i = 1; i &lt;= n; ++i) {
+            if (dist[i] == INF) std::cout &lt;&lt; "INF ";
+            else                std::cout &lt;&lt; dist[i] &lt;&lt; ' ';
+        }
+        std::cout &lt;&lt; '\n';
+    }
+    return 0;
+}
+</code></pre>
+<p>下面是邻接表版本的实现（仅风格差异）</p>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using i64 = long long;
+struct Edge {
+    int to;
+    i64 w;
+    Edge(int v, i64 c) : to(v), w(c) {}
+};
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    i64 n, m, s;
+    std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; s;
+
+    std::vector&lt;std::vector&lt;Edge&gt;&gt; edges(n+1);
+    for (int i = 0; i &lt; m; ++i) {
+        int a, b, c;
+        std::cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        edges[a].emplace_back({b, c});
+    }
+
+    const i64 INF = std::numeric_limits&lt;i64&gt;::max();
+    std::vector&lt;i64&gt; dist(n + 1, INF);
+    dist[s] = 0;
+
+    bool updated = true;
+    // 判断提前收敛
+    // n-1 轮松弛
+    for (int round = 1; round &lt; n &amp;&amp; updated; ++round) {
+        updated = false;
+        for(int u = 0;u &lt;= n; u++){
+            if(dist[u] == INF){
+                continue;
+            }
+            for(auto&amp; [v,w] : edges[u]){
+                if(dist[u] + w &lt; dist[v]){
+                    dist[v] = dist[u] + w;
+                    updated = true;
+                }
+            }
+        }
+
+    }
+
+    // 第 n 轮检测负环
+    bool hasNegCycle = false;
+    for (int u = 1; u &lt;= n; ++u) {
+        if (dist[u] == INF) continue;
+        for (auto &amp;[v, w] : edges[u]) {
+            if (dist[u] + w &lt; dist[v]) {
+                hasNegCycle = true;
+                break;
+            }
+        }
+        if (hasNegCycle) break;
+    }
+
+    if (hasNegCycle) {
+        std::cout &lt;&lt; "NEGATIVE CYCLE DETECTED\n";
+    } else {
+        for (int i = 1; i &lt;= n; ++i) {
+            if (dist[i] == INF) std::cout &lt;&lt; "INF ";
+            else                std::cout &lt;&lt; dist[i] &lt;&lt; ' ';
+        }
+        std::cout &lt;&lt; '\n';
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h3 id="4-使用小贴士"><a class="header" href="#4-使用小贴士">4. 使用小贴士</a></h3>
+<ul>
+<li>时间复杂度 <code>O(n·m)</code>，边数较大时请改用 SPFA（队列优化 Bellman-Ford）。</li>
+<li>若只需判断负环，可在第 <code>n</code> 轮后继续松弛并记录哪些点被更新，这些点即在负环上或可达负环。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h2 id="-算法讲解-2"><a class="header" href="#-算法讲解-2">📖 算法讲解</a></h2>
+<h3 id="1-问题模型-2"><a class="header" href="#1-问题模型-2">1. 问题模型</a></h3>
+<p>同 Bellman-Ford：<br />
+给定带权有向图 <code>G=(V,E)</code>，源点 <code>s</code>，求 <code>s</code> 到所有其它顶点的最短路径长度。<br />
+<strong>允许负权边</strong>，<strong>不允许负权环</strong>；若存在从 <code>s</code> 可达的负权环，算法能够检测并报告。</p>
+<hr />
+<h3 id="2-spfa-思想shortest-path-faster-algorithm"><a class="header" href="#2-spfa-思想shortest-path-faster-algorithm">2. SPFA 思想（Shortest Path Faster Algorithm）</a></h3>
+<ol>
+<li>只维护一个<strong>普通队列</strong> <code>q</code>，初始放入源点 <code>s</code>。</li>
+<li>用 <code>inQueue[u]</code> 标记点 <code>u</code> 是否已在队列中，避免重复入队。</li>
+<li>每次弹出队首 <code>u</code>，对其<strong>所有出边</strong>做松弛：<br />
+若 <code>dist[u]+w(u,v) &lt; dist[v]</code>，则更新 <code>dist[v]</code>；<br />
+若 <code>v</code> 不在队列，则把 <code>v</code> 入队。</li>
+<li>用 <code>cnt[v]</code> 记录<strong>当前最短路径包含的边数</strong>；<br />
+若某次更新后 <code>cnt[v] ≥ n</code>，说明存在负权环。</li>
+</ol>
+<p>正确性依旧依赖 Bellman-Ford 的松弛规则，但<strong>只把真正发生更新的点入队</strong>，平均复杂度 <code>O(m)</code>，最坏仍为 <code>O(n·m)</code>。</p>
+<hr />
+<h3 id="3-代码实现-1"><a class="header" href="#3-代码实现-1">3. 代码实现</a></h3>
+<p>风格继续仿照原 Dijkstra 示例：</p>
+<ul>
+<li><code>i64</code> 类型、<code>vector&lt;char&gt;</code> 标记、<code>priority_queue</code> 改为 <code>queue</code></li>
+<li>注释、变量命名、输入输出格式保持一致</li>
+<li>额外返回「是否存在负权环」信息</li>
+</ul>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using i64 = long long;
+struct Edge {
+    int to;
+    i64 w;
+    Edge(int t, i64 c) : to(t), w(c) {}
+};
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    i64 n, m, s;
+    std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; s;
+
+    std::vector&lt;std::vector&lt;Edge&gt;&gt; conn(n + 1);
+    for (int i = 0; i &lt; m; ++i) {
+        int a, b, c;
+        std::cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        conn[a].emplace_back(b, c);
+    }
+
+    const i64 INF = std::numeric_limits&lt;i64&gt;::max();
+    std::vector&lt;i64&gt; dist(n + 1, INF);
+    std::vector&lt;char&gt; inQueue(n + 1, 0);
+    std::vector&lt;int&gt; cnt(n + 1, 0);   // 记录最短路径边数
+    std::queue&lt;int&gt; q;
+
+    dist[s] = 0;
+    q.push(s);
+    inQueue[s] = 1;
+
+    bool hasNegCycle = false;
+    while (!q.empty() &amp;&amp; !hasNegCycle) {
+        int u = q.front();
+        q.pop();
+        inQueue[u] = 0;
+
+        for (auto &amp;[v, w] : conn[u]) {
+            if (dist[u] != INF &amp;&amp; dist[v] &gt; dist[u] + w) {
+                dist[v] = dist[u] + w;
+                cnt[v] = cnt[u] + 1;
+                if (cnt[v] &gt;= n) {          // 负环检测
+                    hasNegCycle = true;
+                    break;
+                }
+                if (!inQueue[v]) {
+                    q.push(v);
+                    inQueue[v] = 1;
+                }
+            }
+        }
+    }
+
+    if (hasNegCycle) {
+        std::cout &lt;&lt; "NEGATIVE CYCLE DETECTED\n";
+    } else {
+        for (int i = 1; i &lt;= n; ++i) {
+            if (dist[i] == INF) std::cout &lt;&lt; "INF ";
+            else                std::cout &lt;&lt; dist[i] &lt;&lt; ' ';
+        }
+        std::cout &lt;&lt; '\n';
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h3 id="4-使用小贴士-1"><a class="header" href="#4-使用小贴士-1">4. 使用小贴士</a></h3>
+<ul>
+<li>平均时间复杂度 <code>O(m)</code>，网格图、随机图常远优于 <code>O(n·m)</code>。</li>
+<li>若只需判断<strong>全图任意负环</strong>，可从<strong>虚拟超级源</strong>向所有点连 <code>0</code> 边，再跑 SPFA；若某点 <code>cnt[v] ≥ n+1</code> 即说明负环存在。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<p>前情提要：
+dijkstra算法的复杂度:    <code>O((m+n)*log(n))</code>
+Bellmen-ford 复杂度:  <code>O(m*n)</code>
+这些算法有如下缺点：
+1，复杂度依赖边数m，当边数<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>时，整体算法的复杂度会接近<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">))</span></span></span></span>与<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>
+2，算法只能求单源到所有点的，如果要求任意两点之间的距离，那就只能n次调用上述算法，最差复杂度来到了<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mopen">(</span><span class="mord mathnormal">n</span><span class="mclose">))</span></span></span></span>与<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，完全无法接受</p>
+<h1 id="floyd算法弗洛伊德算法"><a class="header" href="#floyd算法弗洛伊德算法">Floyd算法（弗洛伊德算法）</a></h1>
+<h2 id="算法核心介绍"><a class="header" href="#算法核心介绍">算法核心介绍</a></h2>
+<h3 id="算法核心"><a class="header" href="#算法核心">算法核心</a></h3>
+<p>这个算法的核心非常接近<strong>动态规划</strong>
+算法的核心思想非常简单：
+对于任意两个点<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span>，我们可以选取一个点<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>，并且将连通<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span>的全体路径分为两类：经过<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>的，和不经过的
+假设我们使用<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span></span></span></span>来表示<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span>之间的，<strong>不经过大于<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span>的点</strong>的最短路长度，那么它便只可能从两种状态转移而来：最短路上没有k，保留<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span></span></span></span>；或者最短路经过k了，为<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span></span></span></span>
+那么，核心的状态转移方程即
+<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">min</span><span class="mopen">(</span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">])</span></span></span></span></p>
+<h3 id="空间优化"><a class="header" href="#空间优化">空间优化</a></h3>
+<p>显然，当前代码的空间复杂度是<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，太不优雅，也难搞
+我们可以注意到，由于<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>总是成立的（因为自己到自己的距离总是0），
+因此有：<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">min</span><span class="mopen">(</span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">])</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span></span></span></span>,
+同理：<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span></span></span></span>
+因此，不难发现，类似于滚动数组优化，我们完全没有必要保留第一个k数组--如果从<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal">p</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span></span></span></span>转移而来，那本地就是原来的值，从后者转移而来，两项的数值都没有任何差异，因此我们可以做出优化，省略掉k数组，将空间复杂度优化到<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>。</p>
+<h2 id="核心代码"><a class="header" href="#核心代码">核心代码</a></h2>
+<pre><code class="language-c++">using i64 = long long;
+constexpr i64 INF = std::numeric_limits&lt;i64&gt;::max();
+std::vector&lt;std::vector&lt;i64&gt;&gt;dp(n+1,std::vector&lt;i64&gt;(n+1,INF));
+// 此处构建邻接矩阵
+for(int k = 1;k &lt;= n; ++k){
+    for(int i = 1;i &lt;= n; ++i){
+        for(int j = 1;j &lt;= n; ++j){
+            if(dp[i][k] &lt; INF &amp;&amp; dp[k][j] &lt; INF)
+                dp[i][j] = std::min(dp[i][j],dp[i][k]+dp[k][j]);
+        }      
+    }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h1 id="c-smilo-and-minecraft"><a class="header" href="#c-smilo-and-minecraft">C. Smilo and Minecraft</a></h1>
+<p>The boy Smilo is playing Minecraft! To prepare for the battle with the dragon, he needs a lot of golden apples, and for that, he requires a lot of gold. Therefore, Smilo goes to the mine.</p>
+<p>The mine is a rectangular grid of size n×m, where each cell can be either gold ore, stone, or an empty cell. Smilo can blow up dynamite in any empty cell. When dynamite explodes in an empty cell with coordinates (x,y), all cells within a square of side 2k+1 centered at cell (x,y) become empty. If gold ore was located <strong>strictly inside</strong> this square (not on the boundary), it disappears. However, if the gold ore was on the boundary of this square, Smilo collects that gold.</p>
+<p>Dynamite can only be detonated inside the mine, but the explosion square can extend beyond the mine's boundaries.</p>
+<p>Determine the maximum amount of gold that Smilo can collect.</p>
+<p><strong>Input</strong></p>
+<p>Each test contains multiple test cases. The first line contains the number of test cases t (1≤t≤104). The description of the test cases follows.</p>
+<p>The first line of each test case contains three integers n, m, and k (1≤n,m,k≤500) — the number of rows, columns, and the explosion parameter k, respectively.</p>
+<p>Each of the following n lines contains m characters, each of which is equal to '.', '#', or 'g', where '.' — is an empty cell, '#' — is stone, 'g' — is gold. It is guaranteed that at least one of the cells is empty.</p>
+<p>It is guaranteed that the sum n⋅m across all test cases does not exceed 2.5⋅105.</p>
+<p><strong>Output</strong></p>
+<p>For each test case, output a single integer — the maximum amount of gold that can be obtained.</p>
+<p><strong>Example</strong></p>
+<p>Input</p>
+<pre><code>3
+2 3 1
+#.#
+g.g
+2 3 2
+#.#
+g.g
+3 4 2
+.gg.
+g..#
+g##.
+</code></pre>
+<p>Output</p>
+<pre><code>2
+0
+4
+</code></pre>
+<hr />
+<h3 id="解题思路"><a class="header" href="#解题思路">解题思路</a></h3>
+<p>​	该题是一个贪心题，只需要找到所有初始空位对应矩形范围内销毁的金块中的最小值。然后在初始爆炸的范围内进行平滑移动进行爆破即可无损耗的得到剩余所有金块，即<span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal">o</span><span class="mord mathnormal">u</span><span class="mord mathnormal">n</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">G</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9456em;vertical-align:-0.2861em;"></span><span class="mord mathnormal">mi</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight">es</span><span class="mord mathnormal mtight">t</span><span class="mord mathnormal mtight">orye</span><span class="mord mathnormal mtight">d</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">Gl</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span>，使用二维前缀和进行求解。</p>
+<h3 id="题解"><a class="header" href="#题解">题解</a></h3>
+<pre><code class="language-c++">#include&lt;iostream&gt;
+#include&lt;vector&gt;
+using namespace std;
+int clamp(int num,int max){
+	return (num &lt; 1?0:(num &gt; max?max:num));
+}
+int query(vector&lt;vector&lt;int&gt;&gt;&amp; numbers,int x,int y,int k,int n,int m){
+	int x1 = clamp(x + k,n); int y1 = clamp(y + k,m);
+	int x2 = clamp(x - k - 1,n); int y2 = clamp(y - k - 1,m);
+	int x3 = clamp(x + k,n); int y3 = clamp(y - k - 1,m);
+	int x4 = clamp(x - k - 1,n); int y4 = clamp(y + k,m);
+	return numbers[x1][y1] + numbers[x2][y2] - numbers[x3][y3] - numbers[x4][y4];
+}
+int main(){
+	int T;
+	cin &gt;&gt; T;
+	while(T--&gt;0){
+		int n,m,k;
+		cin &gt;&gt; n &gt;&gt; m &gt;&gt; k;
+		vector&lt;vector&lt;int&gt;&gt; ps(n+1,vector&lt;int&gt;(m+1));
+		vector&lt;pair&lt;int,int&gt;&gt; empty;
+		for(int i = 1;i &lt;= n;i++){
+			for(int j = 1;j &lt;= m;j++)
+			{
+				char temp;
+				cin &gt;&gt; temp;
+				if(temp == '.'){
+					ps[i][j] = ps[i][j-1] + ps[i-1][j] - ps[i-1][j-1]; 
+					empty.emplace_back(make_pair(i,j));
+				}else if(temp == 'g'){
+					ps[i][j] = 1 + ps[i][j-1] + ps[i-1][j] - ps[i-1][j-1];
+				}else{
+					ps[i][j] = ps[i][j-1] + ps[i-1][j] - ps[i-1][j-1]; 
+				}
+			}	
+		}
+		int min = 2000000;
+		for(auto&amp; [x,y]:empty){
+			int temp = query(ps,x,y,k-1,n,m);
+			if(temp &lt; min){
+				min = temp;
+			}
+		}
+		cout &lt;&lt; ps[n][m] - min &lt;&lt; endl;
+	}
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h1 id="d-cheater"><a class="header" href="#d-cheater">D. Cheater</a></h1>
+<p>You are playing a new card game in a casino with the following rules:</p>
+<ol>
+<li>The game uses a deck of 2n cards with different values.</li>
+<li>The deck is evenly split between the player and the dealer: each receives n cards.</li>
+<li>Over n rounds, the player and the dealer simultaneously play one top card from their hand. The cards are compared, and the point goes to the one whose card has a higher value. The winning card is removed from the game, while the losing card is returned to the hand <strong>and placed on top of the other cards</strong> in the hand of the player who played it.</li>
+</ol>
+<p>Note that the game always lasts <strong>exactly</strong> n rounds.</p>
+<p>You have tracked the shuffling of the cards and know the order of the cards in the dealer's hand (from top to bottom). You want to maximize your score, so you can swap any two cards in your hand <strong>no more than once</strong> (to avoid raising suspicion).</p>
+<p>Determine the maximum number of points you can achieve.</p>
+<p><strong>Input</strong></p>
+<p>Each test contains multiple test cases. The first line contains the number of test cases t (1≤t≤5⋅104). The description of the test cases follows.</p>
+<p>The first line of each test case contains a single integer n (1≤n≤2⋅105) — the number of cards in the player's hand.</p>
+<p>The second line of each test case contains n integers a1,a2,…,an (1≤ai≤2n) — the values of the cards in the player's hand from top to bottom.</p>
+<p>The third line of each test case contains n integers b1,b2,…,bn (1≤bi≤2n) — the values of the cards in the dealer's hand from top to bottom.</p>
+<p>It is guaranteed that the values of all cards are distinct.</p>
+<p>It is guaranteed that the sum of n over all test cases does not exceed 2⋅105.</p>
+<p><strong>Output</strong></p>
+<p>For each test case, output a single integer — the maximum number of points you can achieve.</p>
+<p><strong>Example</strong></p>
+<p>Input</p>
+<pre><code>3
+7
+13 7 4 9 12 10 2
+6 1 14 3 8 5 11
+3
+1 6 5
+2 3 4
+5
+8 6 3 10 1
+7 9 5 2 4
+</code></pre>
+<p>Output</p>
+<pre><code>6
+2
+3
+</code></pre>
+<hr />
+<h3 id="解题思路-1"><a class="header" href="#解题思路-1">解题思路</a></h3>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>

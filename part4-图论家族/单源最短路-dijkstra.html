@@ -1,0 +1,333 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>单源最短路 - Dijkstra - algorithm blog</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">algorithm blog</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h2 id="-算法讲解"><a class="header" href="#-算法讲解">📖 算法讲解</a></h2>
+<h3 id="1-问题模型"><a class="header" href="#1-问题模型">1. 问题模型</a></h3>
+<p>给定带权有向图 <code>G=(V,E)</code>，源点 <code>s</code>，求 <code>s</code> 到所有其它顶点的最短路径长度（权值和最小）。<br />
+允许权值为正，<strong>不允许负权边</strong>（否则需 Bellman-Ford/SPFA）。</p>
+<hr />
+<h3 id="2-dijkstra-思想"><a class="header" href="#2-dijkstra-思想">2. Dijkstra 思想</a></h3>
+<ol>
+<li>维护一个「已确定最短路径」的集合 <code>S</code>，初始只有 <code>s</code>。</li>
+<li>每次从 <code>V-S</code> 中挑选一个「距离源点最近」的顶点 <code>u</code>，加入 <code>S</code>。</li>
+<li>用 <code>u</code> 的所有出边做<strong>松弛操作</strong>（relax）：<br />
+若 <code>dist[u] + w(u,v) &lt; dist[v]</code>，则更新 <code>dist[v]</code>。</li>
+<li>重复第 2 步直到所有顶点都在 <code>S</code> 中。</li>
+</ol>
+<p>正确性证明依赖于「非负权」下的贪心选择性质：当前堆顶挑出的 <code>u</code> 已经不可能被后续节点再次松弛出更小的值：
+假定一个节点能够被以两条路径到达，不妨设第一条路径为直接到达，权值为100，第二条路径为绕99个节点到达，每个节点权值为1。
+在这种情况下，由于每次堆顶弹出从初始点到对应节点的权值最小的那一条路径，因此它每次都会优先弹出绕路的路径。
+（即使是最后一个节点，绕路的路径的j依然是99，小于直接走的100）
+因此，我们可以确认，堆顶首次弹出的方案就是最优的</p>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using i64 = long long;
+struct Edge{
+    int to;
+    i64 w;
+    bool operator&lt;(const Edge&amp; b)const{
+        return w &gt; b.w;
+        //为了获得最小堆，需要反过来
+    }
+    Edge(int t,i64 w)
+        :to(t),w(w){
+    }
+};
+int main(){
+    i64 n,m,s;
+    std::cin&gt;&gt;n&gt;&gt;m&gt;&gt;s;
+    std::vector&lt;std::vector&lt;Edge&gt;&gt; conn(n+1);
+    // 初始化邻接矩阵
+    for(int i = 0;i &lt; m;++i){
+        int a,b,c;
+        std::cin&gt;&gt;a&gt;&gt;b&gt;&gt;c;
+        conn[a].push_back({b,c}); 
+    }
+    // 建立图
+    std::priority_queue&lt;Edge&gt; q;
+    // 优先队列，保证每次弹出的都是距离已经更新的节点最近的节点
+    q.push({s,0});
+    // 优先队列中压入初始节点
+    std::vector&lt;i64&gt; minDistance(n+1,std::numeric_limits&lt;i64&gt;::max());
+    // 结果向量，存储初始节点到每个节点的最短路径，初始化为正无穷
+    minDistance[s] = 0;
+    // 将初始节点到自己的距离设置为0
+    std::vector&lt;char&gt; vis(n+1,0);
+    // vis向量，避免重复更新
+    while(!q.empty()){
+        auto [i,j] = q.top();q.pop();
+        // 获取堆顶的节点（即距离已更新节点最近的节点）
+        // i代表当前节点索引，j代表从初始节点到i节点的最小权值
+        if(vis[i])continue;
+        vis[i] = 1;
+        // 注意：不写这个vis依然能得到正确结果，但是它会tle
+        // 假定一个节点能够被以两条路径到达，不妨设第一条路径为直接到达，权值为100，第二条路径为绕99个节点到达，每个节点权值为1
+        // 在这种情况下，由于每次堆顶弹出从初始点到对应节点的权值最小的那一条路径，因此它每次都会优先弹出绕路的路径
+        // （即使是最后一个节点，绕路的路径的j依然是99，小于直接走的100）
+        // 因此，我们可以确认，如果堆顶弹出这个节点，那么这个节点一定已经是最优的节点
+        // （但是，作为其他节点的子节点，确实可能被更新多次）
+        for(auto [a,b]:conn[i]){
+            // 通过邻接矩阵访问当前节点链接的节点
+            // a代表下一个节点的索引，b代表距离下一个节点的距离
+            if(minDistance[a] &gt; j + b){
+                // 如果通过当前路径能更短的到达下一个节点，那么就更新
+                minDistance[a] = j + b;
+                q.push({a,minDistance[a]});
+            }
+        }
+    }
+    for(int i = 1;i &lt;= n;++i){
+        std::cout&lt;&lt;minDistance[i]&lt;&lt;" ";
+    }
+    std::cout&lt;&lt;std::endl;
+    return 0;
+}
+
+</code></pre>
+<h3 id="复杂度计算"><a class="header" href="#复杂度计算">复杂度计算</a></h3>
+<p>把复杂度拆成<strong>两部分</strong>看就清楚了：</p>
+<ol>
+<li>
+<p>每个顶点<strong>最多进堆一次</strong><br />
+共 <code>n</code> 个顶点 → 堆中插入/弹出 <code>n</code> 次，每次 <code>O(log n)</code><br />
+合计 <code>O(n log n)</code></p>
+</li>
+<li>
+<p>每条边<strong>最多触发一次松弛并成功更新</strong><br />
+共 <code>m</code> 条边 → 每次更新要把新距离 <code>push</code> 进堆，<code>O(log n)</code><br />
+合计 <code>O(m log n)</code></p>
+</li>
+</ol>
+<p>把两部分相加就是<br />
+<code>O(n log n + m log n) = O((n + m) log n)</code></p>
+<ul>
+<li>当图<strong>稀疏</strong>（<code>m ≈ n</code>）时，复杂度由 <code>n log n</code> 主导；</li>
+<li>当图<strong>稠密</strong>（<code>m ≈ n²</code>）时，复杂度由 <code>m log n</code> 主导。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part3-动态规划/基础背包问题.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../part4-图论家族/单源最短路-bellman-ford.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part3-动态规划/基础背包问题.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../part4-图论家族/单源最短路-bellman-ford.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

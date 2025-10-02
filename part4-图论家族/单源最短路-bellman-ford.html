@@ -1,0 +1,392 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>单源最短路 - bellman-ford - algorithm blog</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">algorithm blog</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css">
+<h2 id="-算法讲解"><a class="header" href="#-算法讲解">📖 算法讲解</a></h2>
+<h3 id="1-问题模型"><a class="header" href="#1-问题模型">1. 问题模型</a></h3>
+<p>给定带权有向图 <code>G=(V,E)</code>，源点 <code>s</code>，求 <code>s</code> 到所有其它顶点的最短路径长度（权值和最小）。<br />
+<strong>允许负权边</strong>，但<strong>不允许负权环</strong>（否则最短路径无定义）。<br />
+若图中存在从 <code>s</code> 可达的负权环，算法能够检测并报告。</p>
+<hr />
+<h3 id="2-bellman-ford-思想"><a class="header" href="#2-bellman-ford-思想">2. Bellman-Ford 思想</a></h3>
+<ol>
+<li>维护一个距离数组 <code>dist[1…n]</code>，初始时 <code>dist[s]=0</code>，其余为正无穷。</li>
+<li>进行 <code>n-1</code> 轮「全边松弛」：<br />
+对每条边 <code>(u,v,w)</code>，若 <code>dist[u]+w &lt; dist[v]</code>，则更新 <code>dist[v]</code>。</li>
+<li>第 <code>n</code> 轮再扫描所有边，若仍能松弛，则说明存在负权环。</li>
+</ol>
+<p>正确性证明依赖于「路径边数」归纳：<br />
+第 <code>k</code> 轮结束后，所有<strong>最多由 <code>k</code> 条边组成</strong>的最短路径都已求出。<br />
+由于简单路径最多 <code>n-1</code> 条边，<code>n-1</code> 轮即可保证收敛；第 <code>n</code> 轮若仍松弛，说明存在无限缩短的负环。</p>
+<hr />
+<h3 id="3-代码实现"><a class="header" href="#3-代码实现">3. 代码实现</a></h3>
+<p>以下代码与给出 Dijkstra 示例风格保持一致：</p>
+<ul>
+<li>采用 <code>i64</code> 类型</li>
+<li>使用 <code>vector&lt;char&gt;</code> 做标志</li>
+<li>注释风格、变量命名、输入输出格式均仿照原示例</li>
+<li>额外返回「是否存在负权环」信息</li>
+</ul>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using i64 = long long;
+struct Edge {
+    int from, to;
+    i64 w;
+    Edge(int u, int v, i64 c) : from(u), to(v), w(c) {}
+};
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    i64 n, m, s;
+    std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; s;
+
+    std::vector&lt;Edge&gt; edges;
+    // 本题暂时不需要使用邻接矩阵
+    edges.reserve(m);
+    for (int i = 0; i &lt; m; ++i) {
+        int a, b, c;
+        std::cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        edges.emplace_back(a, b, c);
+    }
+
+    const i64 INF = std::numeric_limits&lt;i64&gt;::max();
+    std::vector&lt;i64&gt; dist(n + 1, INF);
+    dist[s] = 0;
+
+    // n-1 轮松弛
+    for (int round = 1; round &lt; n; ++round) {
+        bool updated = false;
+        for (auto &amp;[u, v, w] : edges) {
+            if (dist[u] != INF &amp;&amp; dist[v] &gt; dist[u] + w) {
+                dist[v] = dist[u] + w;
+                updated = true;
+            }
+        }
+        if (!updated) break;          // 提前收敛
+    }
+
+    // 第 n 轮检测负环
+    bool hasNegCycle = false;
+    for (auto &amp;[u, v, w] : edges) {
+        if (dist[u] != INF &amp;&amp; dist[v] &gt; dist[u] + w) {
+            hasNegCycle = true;
+            break;
+        }
+    }
+
+    if (hasNegCycle) {
+        std::cout &lt;&lt; "NEGATIVE CYCLE DETECTED\n";
+    } else {
+        for (int i = 1; i &lt;= n; ++i) {
+            if (dist[i] == INF) std::cout &lt;&lt; "INF ";
+            else                std::cout &lt;&lt; dist[i] &lt;&lt; ' ';
+        }
+        std::cout &lt;&lt; '\n';
+    }
+    return 0;
+}
+</code></pre>
+<p>下面是邻接表版本的实现（仅风格差异）</p>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+using i64 = long long;
+struct Edge {
+    int to;
+    i64 w;
+    Edge(int v, i64 c) : to(v), w(c) {}
+};
+int main() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+
+    i64 n, m, s;
+    std::cin &gt;&gt; n &gt;&gt; m &gt;&gt; s;
+
+    std::vector&lt;std::vector&lt;Edge&gt;&gt; edges(n+1);
+    for (int i = 0; i &lt; m; ++i) {
+        int a, b, c;
+        std::cin &gt;&gt; a &gt;&gt; b &gt;&gt; c;
+        edges[a].emplace_back({b, c});
+    }
+
+    const i64 INF = std::numeric_limits&lt;i64&gt;::max();
+    std::vector&lt;i64&gt; dist(n + 1, INF);
+    dist[s] = 0;
+
+    bool updated = true;
+    // 判断提前收敛
+    // n-1 轮松弛
+    for (int round = 1; round &lt; n &amp;&amp; updated; ++round) {
+        updated = false;
+        for(int u = 0;u &lt;= n; u++){
+            if(dist[u] == INF){
+                continue;
+            }
+            for(auto&amp; [v,w] : edges[u]){
+                if(dist[u] + w &lt; dist[v]){
+                    dist[v] = dist[u] + w;
+                    updated = true;
+                }
+            }
+        }
+
+    }
+
+    // 第 n 轮检测负环
+    bool hasNegCycle = false;
+    for (int u = 1; u &lt;= n; ++u) {
+        if (dist[u] == INF) continue;
+        for (auto &amp;[v, w] : edges[u]) {
+            if (dist[u] + w &lt; dist[v]) {
+                hasNegCycle = true;
+                break;
+            }
+        }
+        if (hasNegCycle) break;
+    }
+
+    if (hasNegCycle) {
+        std::cout &lt;&lt; "NEGATIVE CYCLE DETECTED\n";
+    } else {
+        for (int i = 1; i &lt;= n; ++i) {
+            if (dist[i] == INF) std::cout &lt;&lt; "INF ";
+            else                std::cout &lt;&lt; dist[i] &lt;&lt; ' ';
+        }
+        std::cout &lt;&lt; '\n';
+    }
+    return 0;
+}
+</code></pre>
+<hr />
+<h3 id="4-使用小贴士"><a class="header" href="#4-使用小贴士">4. 使用小贴士</a></h3>
+<ul>
+<li>时间复杂度 <code>O(n·m)</code>，边数较大时请改用 SPFA（队列优化 Bellman-Ford）。</li>
+<li>若只需判断负环，可在第 <code>n</code> 轮后继续松弛并记录哪些点被更新，这些点即在负环上或可达负环。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part4-图论家族/单源最短路-dijkstra.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../part4-图论家族/单源最短路-SPFA.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part4-图论家族/单源最短路-dijkstra.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../part4-图论家族/单源最短路-SPFA.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
