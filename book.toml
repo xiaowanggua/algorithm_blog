@@ -3,3 +3,6 @@ authors = ["xiaowanggua"]
 language = "zh"
 src = "src"
 title = "algorithm blog"
+
+[preprocessor.katex]
+after = ["links"]

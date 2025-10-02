@@ -18,6 +18,9 @@ jobs:
     - name: Install mdbook
       run: cargo install mdbook
 
+    - name: Install mdbook-katex
+      run: cargo install mdbook-katex
+
     - name: Build book
       run: mdbook build
 
