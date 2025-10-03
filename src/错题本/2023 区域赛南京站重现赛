@@ -1,1 +1,28 @@
 
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+using namespace std;
+#define ll long long
+#include <algorithm>
+
+void solve(){
+    ll n,m;
+    cin>>n>>m;
+
+    return;
+}
+ 
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int t;
+    cin >> t;
+    while (t--) {
+        solve();
+    }
+    // solve();
+    return 0;
+}
+
